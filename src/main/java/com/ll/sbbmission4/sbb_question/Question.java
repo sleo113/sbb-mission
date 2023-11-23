@@ -1,6 +1,7 @@
 package com.ll.sbbmission4.sbb_question;
 
 import com.ll.sbbmission4.sbb_answer.Answer;
+import com.ll.sbbmission4.user.Site_User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,4 +28,6 @@ public class Question {
 
     private LocalDateTime createDate;
 
+    @ManyToOne
+    private Site_User author;
 }
