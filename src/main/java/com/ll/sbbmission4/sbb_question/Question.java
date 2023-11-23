@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,4 +33,7 @@ public class Question {
     private Site_User author;
 
     private LocalDateTime modifyDate;
+
+    @ManyToMany
+    Set<Site_User> voter;
 }
