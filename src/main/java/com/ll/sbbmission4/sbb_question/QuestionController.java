@@ -33,6 +33,11 @@ public class QuestionController {
         return "question_detail";
     }
 
+    @GetMapping("/create")
+    public String questionCreate(QuestionForm questionForm) {
+        return "question_form";
+    }
+
     @PostMapping("/create")
     public String questionCreate(@Valid QuestionForm questionForm, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
