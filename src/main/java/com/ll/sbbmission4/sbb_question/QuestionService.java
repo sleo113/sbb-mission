@@ -59,7 +59,7 @@ public class QuestionService {
         sorts.add(Sort.Order.desc("createDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         Specification<Question> spec = search(kw);
-        return this.questionRepository.findAll(spec, pageable);
+        return this.questionRepository.findAllByKeyword(kw, pageable);
     }
 
     public void create(String subject, String content, Site_User user) {
@@ -86,4 +86,5 @@ public class QuestionService {
         question.getVoter().add(siteUser);
         this.questionRepository.save(question);
     }
+
 }
