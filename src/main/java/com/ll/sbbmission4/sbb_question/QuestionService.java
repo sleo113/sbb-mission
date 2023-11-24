@@ -1,12 +1,15 @@
 package com.ll.sbbmission4.sbb_question;
 
 import com.ll.sbbmission4.DataNotFoundException;
+import com.ll.sbbmission4.sbb_answer.Answer;
 import com.ll.sbbmission4.user.Site_User;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,6 +25,24 @@ public class QuestionService {
 
     public List<Question> getList() {
         return this.questionRepository.findAll();
+    }
+
+    private Specification<Question> search(String kw) {
+        return new Specification<>() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Predicate toPredicate(Root<Question> q, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                query.distinct(true);  // 중복을 제거
+                Join<Question, Site_User> u1 = q.join("author", JoinType.LEFT);
+                Join<Question, Answer> a = q.join("answerList", JoinType.LEFT);
+                Join<Answer, Site_User> u2 = a.join("author", JoinType.LEFT);
+                return cb.or(cb.like(q.get("subject"), "%" + kw + "%"), // 제목
+                        cb.like(q.get("content"), "%" + kw + "%"),      // 내용
+                        cb.like(u1.get("username"), "%" + kw + "%"),    // 질문 작성자
+                        cb.like(a.get("content"), "%" + kw + "%"),      // 답변 내용
+                        cb.like(u2.get("username"), "%" + kw + "%"));   // 답변 작성자
+            }
+        };
     }
 
     public Question getQuestion(Integer id) {
